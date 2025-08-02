@@ -1,0 +1,143 @@
+// Get references to DOM elements
+let productName = document.getElementById("productName");
+let productPrice = document.getElementById("productPrice");
+let productImg = document.getElementById("productImg");
+let productDesc = document.getElementById("productDesc");
+let productsContainer = document.getElementById("productsContainer");
+let addProductBtn = document.getElementById("addProductBtn");
+
+// Get user ID from local storage
+let userid = localStorage.getItem("userId");
+console.log(userid);
+
+// Function to update product count
+function updateProductCount() {
+  const productCount = document.getElementById("productCount");
+  const products = productsContainer.children;
+  if (productCount) {
+    productCount.textContent = products.length;
+  }
+}
+
+// Function to fetch and display products based on user ID
+function showProducts(id) {
+  fetch(`http://localhost:3000/products`) // Fetch all products
+    .then((res) => res.json()) // Parse response as JSON
+    .then((products) => {
+      // Clear existing products
+      productsContainer.innerHTML = "";
+
+      // Filter products that match the provided ID
+      let newproducts = products.filter((prod) => {
+        return prod.id == id;
+      });
+
+      // Loop through filtered products and display them
+      newproducts.forEach((prod) => {
+        let child = document.createElement("div"); // Container for each product
+        child.className = "seller-product"; // Add CSS class for styling
+
+        let img = document.createElement("img"); // Product image
+        img.src = prod.img;
+        img.alt = prod.name; // Add alt text for accessibility
+
+        let name = document.createElement("h3"); // Product name
+        name.innerHTML = prod.name;
+
+        let price = document.createElement("p"); // Product price
+        price.innerHTML = `₹${prod.price}`;
+        price.className = "price";
+
+        let prodDesc = document.createElement("p"); // Product description
+        prodDesc.innerHTML = prod.description;
+        prodDesc.className = "description";
+
+        // Create delete button
+        let deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = "Delete Product";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = () => deleteProduct(prod.id);
+
+        // Append all product details to the container
+        child.append(img, name, price, prodDesc, deleteBtn);
+
+        // Append the product container to the main container
+        productsContainer.append(child);
+
+        // Log product to console for debugging
+        console.log(prod);
+      });
+
+      // Update product count
+      updateProductCount();
+    })
+    .catch((err) => {
+      // Handle errors
+      console.log(err);
+    });
+}
+
+// Function to delete a product
+function deleteProduct(productId) {
+  if (confirm("Are you sure you want to delete this product?")) {
+    fetch(`http://localhost:3000/products/${productId}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        console.log("Product deleted successfully");
+        showProducts(userid); // Refresh the product list
+      })
+      .catch((err) => console.log(err));
+  }
+}
+
+// Call the function to show products for the current user
+showProducts(userid);
+
+// Add event listener to the "Add Product" button
+addProductBtn.onclick = (e) => {
+  e.preventDefault(); // Prevent form submission
+  console.log("btnclicked"); // Log button click
+
+  // Create an object with product details from form inputs
+  let productDetails = {
+    id: userid,
+    name: productName.value,
+    price: productPrice.value,
+    img: productImg.value,
+    description: productDesc.value,
+  };
+
+  // Check if any of the fields are missing
+  if (
+    !productName.value ||
+    !productPrice.value ||
+    !productImg.value ||
+    !productDesc.value
+  ) {
+    alert("All fields are mandatory"); // Show alert if any field is missing
+    return;
+  }
+
+  // Send a POST request to add the product
+  fetch(`http://localhost:3000/products`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Fixed typo in header name
+    },
+    body: JSON.stringify(productDetails), // Convert object to JSON string
+  })
+    .then((res) => res.json()) // Parse response
+    .then(() => {
+      console.log("Product Added Successfully");
+      // Clear the form
+      productName.value = "";
+      productPrice.value = "";
+      productImg.value = "";
+      productDesc.value = "";
+      // Refresh the product list
+      showProducts(userid);
+    })
+    .catch((err) => console.log(err)); // Handle errors
+};

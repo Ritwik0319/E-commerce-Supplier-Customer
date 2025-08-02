@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="seller-dashboard">
+        <div class="seller-sidebar">
+            <div class="sidebar-header">
+                <h1>Seller Dashboard</h1>
+            </div>
+            <div class="sidebar-content">
+                <form id="addProductForm">
+                    <h3>Add New Product</h3>
+                    <input type="text" id="productName" placeholder="Product Name" required>
+                    <input type="number" id="productPrice" placeholder="Price" required>
+                    <input type="text" id="productImg" placeholder="Image URL" required>
+                    <textarea id="productDesc" placeholder="Description" required></textarea>
+                    <button type="submit" id="addProductBtn">Add Product</button>
+                </form>
+            </div>
+        </div>
+        <div class="seller-main">
+            <div class="main-header">
+                <h2>My Products</h2>
+                <div class="product-count">
+                    <span id="productCount">0</span> Products
+                </div>
+            </div>
+            <div class="main-content">
+                <div id="productsContainer">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="seller.js"></script>
+</body>
+
+</html>

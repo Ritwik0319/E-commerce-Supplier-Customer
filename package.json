@@ -33,12 +33,15 @@
       "password": "messy1234"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "kyro",
       "email": "kyro1234@gmail.com",
       "password": "kyro1234"
     }
   ],
+
+
+  
   "products": [
     {
       "id": "3",
@@ -50,13 +53,6 @@
     {
       "id": "3",
       "name": "mango",
-      "price": "600",
-      "img": "https://images.pexels.com/photos/867349/pexels-photo-867349.jpeg?_gl=1*1fhzxq6*_ga*MjI0MTQ3Mzg1LjE3NTM3MTM1NDI.*_ga_8JE65Q40S6*czE3NTM5NjQ0NzAkbzQkZzEkdDE3NTM5NjQ3MjQkajMyJGwwJGgw",
-      "description": "kool kewi"
-    },
-    {
-      "id": "1",
-      "name": "banana",
       "price": "600",
       "img": "https://images.pexels.com/photos/867349/pexels-photo-867349.jpeg?_gl=1*1fhzxq6*_ga*MjI0MTQ3Mzg1LjE3NTM3MTM1NDI.*_ga_8JE65Q40S6*czE3NTM5NjQ0NzAkbzQkZzEkdDE3NTM5NjQ3MjQkajMyJGwwJGgw",
       "description": "kool kewi"
@@ -102,6 +98,20 @@
       "price": "160",
       "img": "https://images.pexels.com/photos/708777/pexels-photo-708777.jpeg?_gl=1*1987k69*_ga*MjI0MTQ3Mzg1LjE3NTM3MTM1NDI.*_ga_8JE65Q40S6*czE3NTQxMjI2NzQkbzYkZzEkdDE3NTQxMjI2ODEkajUzJGwwJGgw",
       "description": "gweey black grapes\n"
+    },
+    {
+      "id": "1",
+      "name": "Banana",
+      "price": "120",
+      "img": "https://images.pexels.com/photos/33214232/pexels-photo-33214232.jpeg?_gl=1*h566w5*_ga*MjI0MTQ3Mzg1LjE3NTM3MTM1NDI.*_ga_8JE65Q40S6*czE3NTQxMjI2NzQkbzYkZzEkdDE3NTQxMjM5MDIkajQ2JGwwJGgw",
+      "description": "yellow fresh banana's\n"
+    },
+    {
+      "id": "1",
+      "name": "banana's",
+      "price": "300",
+      "img": "https://images.pexels.com/photos/33214232/pexels-photo-33214232.jpeg?_gl=1*h566w5*_ga*MjI0MTQ3Mzg1LjE3NTM3MTM1NDI.*_ga_8JE65Q40S6*czE3NTQxMjI2NzQkbzYkZzEkdDE3NTQxMjM5MDIkajQ2JGwwJGgw",
+      "description": "banana\n"
     }
   ]
 }

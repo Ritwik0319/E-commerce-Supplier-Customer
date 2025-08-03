@@ -98,7 +98,6 @@ showProducts(userid);
 // Add event listener to the "Add Product" button
 addProductBtn.onclick = (e) => {
   e.preventDefault(); // Prevent form submission
-  console.log("btnclicked"); // Log button click
 
   // Create an object with product details from form inputs
   let productDetails = {

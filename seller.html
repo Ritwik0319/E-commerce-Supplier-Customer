@@ -20,6 +20,7 @@
                     <input type="text" id="productName" placeholder="Product Name" required>
                     <input type="number" id="productPrice" placeholder="Price" required>
                     <input type="text" id="productImg" placeholder="Image URL" required>
+                    <input type="text" id="productCategory" placeholder="Product Category" required>
                     <textarea id="productDesc" placeholder="Description" required></textarea>
                     <button type="submit" id="addProductBtn">Add Product</button>
                 </form>
@@ -28,8 +29,11 @@
         <div class="seller-main">
             <div class="main-header">
                 <h2>My Products</h2>
-                <div class="product-count">
-                    <span id="productCount">0</span> Products
+                <div class="main-header-b">
+                    <div class="product-count">
+                        <span id="productCount">0</span> Products
+                    </div>
+                    <button class="logoutbtn">LogOut</button>
                 </div>
             </div>
             <div class="main-content">

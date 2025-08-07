@@ -3,8 +3,18 @@ let productName = document.getElementById("productName");
 let productPrice = document.getElementById("productPrice");
 let productImg = document.getElementById("productImg");
 let productDesc = document.getElementById("productDesc");
+let productCategory=document.getElementById("productCategory")
 let productsContainer = document.getElementById("productsContainer");
 let addProductBtn = document.getElementById("addProductBtn");
+let logoutbtn=document.getElementsByClassName("logoutbtn")[0]
+
+logoutbtn.onclick=()=>{
+  let isConfirm=confirm("Loging Out, Are you sure?")
+  
+  if(isConfirm){
+    location.href="index.html"
+  }
+}
 
 // Get user ID from local storage
 let userid = localStorage.getItem("userId");
@@ -105,6 +115,7 @@ addProductBtn.onclick = (e) => {
     name: productName.value,
     price: productPrice.value,
     img: productImg.value,
+    category:productCategory.value,
     description: productDesc.value,
   };
 
@@ -113,6 +124,7 @@ addProductBtn.onclick = (e) => {
     !productName.value ||
     !productPrice.value ||
     !productImg.value ||
+    !productCategory.value||
     !productDesc.value
   ) {
     alert("All fields are mandatory"); // Show alert if any field is missing
@@ -134,6 +146,7 @@ addProductBtn.onclick = (e) => {
       productName.value = "";
       productPrice.value = "";
       productImg.value = "";
+      productCategory.value="";
       productDesc.value = "";
       // Refresh the product list
       showProducts(userid);

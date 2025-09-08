@@ -2,8 +2,68 @@ window.onload = () => {
   let allProducts = document.getElementById("allProducts");
   let products = []; // Store all products for filtering
 
+  // Initialize cart from localStorage
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // Log initial cart state
+  console.log("Initial cart loaded:", cart);
+  console.log("Initial cart length:", cart.length);
+
+  // Function to sync cart count from localStorage
+  function syncCartCount() {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart = storedCart;
+    updateCartCount();
+    console.log("Cart synced from localStorage:", cart);
+  }
+
+  // Function to force refresh cart from localStorage
+  window.refreshCartFromStorage = function () {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart = storedCart;
+    updateCartCount();
+    console.log("Cart refreshed from localStorage:", cart);
+  };
+
+  // Function to ensure cart count is visible
+  function ensureCartCountVisible() {
+    const cartCount = document.getElementById("cartCount");
+    if (cartCount && cartCount.textContent === "0" && cart.length > 0) {
+      updateCartCount();
+    }
+  }
+
+  // Initial cart count update - wait for DOM to be ready
+  setTimeout(() => {
+    updateCartCount();
+  }, 100);
+
+  // Listen for storage changes (when cart is updated from other tabs/pages)
+  window.addEventListener("storage", function (e) {
+    if (e.key === "cart") {
+      syncCartCount();
+    }
+  });
+
+  // Also update cart count when page becomes visible (when returning from cart page)
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+      syncCartCount();
+    }
+  });
+
+  // Update cart count when page gains focus
+  window.addEventListener("focus", function () {
+    syncCartCount();
+  });
+
+  // Periodic cart count sync (every 2 seconds) to ensure consistency
+  setInterval(() => {
+    ensureCartCountVisible();
+  }, 2000);
+
   // Fetch products from server
-  fetch("http://localhost:3000/products")
+  fetch("https://ecommerce-json-server-a127.onrender.com/products")
     .then((res) => res.json())
     .then((fetchedProducts) => {
       console.log(fetchedProducts);
@@ -35,7 +95,7 @@ window.onload = () => {
       // Create and set image
       const img = document.createElement("img");
       console.log(prod.img);
-      
+
       img.src = prod.img;
       img.alt = prod.name;
 
@@ -54,12 +114,21 @@ window.onload = () => {
       prodDesc.textContent = prod.description;
       prodDesc.className = "product-description";
 
+      // Create Add to Cart button
+      const addToCartBtn = document.createElement("button");
+      addToCartBtn.textContent = "Add to Cart";
+      addToCartBtn.className = "add-to-cart-btn";
+      addToCartBtn.onclick = () => addToCart(prod);
+
       // Append all elements to product card
-      child.append(img, name, price, prodDesc);
+      child.append(img, name, price, prodDesc, addToCartBtn);
 
       // Append product card to container
       allProducts.append(child);
     });
+
+    // Ensure cart count is properly displayed after products are loaded
+    ensureCartCountVisible();
   }
 
   // Category filtering functionality
@@ -166,4 +235,115 @@ window.onload = () => {
       this.reset();
     });
   }
+
+  // Cart functions
+  function addToCart(product) {
+    console.log("Adding product to cart:", product);
+
+    // Create a unique identifier for the product
+    // Use combination of name and price if id is not available
+    const productKey = product.id || `${product.name}-${product.price}`;
+
+    // Check if this exact product already exists
+    const existingItem = cart.find((item) => {
+      const itemKey = item.id || `${item.name}-${item.price}`;
+      return itemKey === productKey;
+    });
+
+    if (existingItem) {
+      console.log("Product already exists, increasing quantity");
+      existingItem.quantity += 1;
+    } else {
+      console.log("Adding new product to cart");
+      cart.push({
+        ...product,
+        quantity: 1,
+        // Ensure we have a unique identifier
+        uniqueId: productKey,
+      });
+    }
+
+    // Save to localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Update cart count immediately
+    updateCartCount();
+
+    // Show success message
+    showNotification(`${product.name} added to cart!`);
+
+    // Log for debugging
+    console.log("Cart updated:", cart);
+    console.log("Cart items count:", cart.length);
+    console.log(
+      "Total quantity:",
+      cart.reduce((total, item) => total + item.quantity, 0)
+    );
+
+    // Also log the localStorage to verify
+    console.log("localStorage cart:", localStorage.getItem("cart"));
+  }
+
+  function updateCartCount() {
+    const cartCount = document.getElementById("cartCount");
+    if (cartCount) {
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCount.textContent = totalItems;
+      console.log("Cart count updated to:", totalItems);
+    } else {
+      console.error("Cart count element not found");
+    }
+  }
+
+  function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = "notification";
+    notification.textContent = message;
+
+    // Add to body
+    document.body.appendChild(notification);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  // Debug functions
+  window.debugCart = function () {
+    console.log("=== CART DEBUG INFO ===");
+    console.log("Current cart array:", cart);
+    console.log("Cart length:", cart.length);
+    console.log("localStorage cart:", localStorage.getItem("cart"));
+    console.log(
+      "Parsed localStorage:",
+      JSON.parse(localStorage.getItem("cart") || "[]")
+    );
+    console.log("Cart count element:", document.getElementById("cartCount"));
+    console.log(
+      "Cart count text:",
+      document.getElementById("cartCount")?.textContent
+    );
+    console.log("=======================");
+
+    // Show alert with cart info
+    const cartInfo = `Cart Items: ${cart.length}\nTotal Quantity: ${cart.reduce(
+      (total, item) => total + item.quantity,
+      0
+    )}\nItems: ${cart
+      .map((item) => `${item.name} (${item.quantity})`)
+      .join(", ")}`;
+    alert(cartInfo);
+  };
+
+  window.clearCart = function () {
+    if (confirm("Are you sure you want to clear the cart?")) {
+      cart = [];
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      showNotification("Cart cleared!");
+      console.log("Cart cleared");
+    }
+  };
 };

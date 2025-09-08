@@ -12,7 +12,7 @@ loginBtn.onclick = (e) => {
     return alert("Both fields are required!");
   }
 
-  fetch("http://localhost:3000/registeredUsers")
+  fetch("https://ecommerce-json-server-a127.onrender.com/registeredUsers")
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
@@ -23,11 +23,11 @@ loginBtn.onclick = (e) => {
 
       if (user) {
         localStorage.setItem("userId", user.id);
-        let userrole=localStorage.getItem("userRole")
-        if(userrole=="seller"){
-          location.href="seller.html"
-        }else{
-          location.href="products.html"
+        let userrole = localStorage.getItem("userRole");
+        if (userrole == "seller") {
+          location.href = "seller.html";
+        } else {
+          location.href = "products.html";
         }
         alert("Login successful!");
       } else {

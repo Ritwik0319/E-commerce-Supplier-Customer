@@ -26,7 +26,7 @@ signUpbtn.onclick = (e) => {
     return alert("Passwords do not match!");
   }
 
-  fetch("http://localhost:3000/registeredUsers")
+  fetch("https://ecommerce-json-server-a127.onrender.com/registeredUsers")
     .then((res) => res.json())
     .then((data) => {
       const existingUser = data.find((user) => user.email === email);
@@ -43,7 +43,7 @@ signUpbtn.onclick = (e) => {
         password: password,
       };
 
-      fetch("http://localhost:3000/registeredUsers", {
+      fetch("https://ecommerce-json-server-a127.onrender.com/registeredUsers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
